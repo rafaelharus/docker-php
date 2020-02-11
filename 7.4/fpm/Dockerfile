@@ -2,7 +2,7 @@ FROM php:7.4-fpm
 
 MAINTAINER Leandro Silva <leandro.silva@zooxsmart.com>
 
-# install modules 
+# install modules
 RUN apt-get update && apt-get install -y \
         procps \
         libfreetype6-dev \
@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y \
         libbz2-dev \
         libedit-dev \
         libxml2-dev \
+        libssh2-1-dev \
+        libssh2-1 \
+        libxslt1-dev \
 	libsodium-dev \
 	libzip-dev \
         libcurl4-openssl-dev \
@@ -37,7 +40,7 @@ RUN cd /tmp && \
     ./configure --prefix="/usr" --libdir=/usr/lib/x86_64-linux-gnu && make && make install
 
 # install php ext
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \ 
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install \
     bcmath \
     bz2 \
@@ -57,6 +60,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
 
 #install redis
 RUN pecl install redis mongodb && docker-php-ext-enable redis mongodb
+
+#install ssh2
+RUN pecl install ssh2-1.1.2 && docker-php-ext-enable ssh2
 
 # install composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
